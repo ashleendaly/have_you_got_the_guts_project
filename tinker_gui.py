@@ -24,17 +24,17 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 # ---- Add Colleague
 add_colleague_label = Label(left_frame, text="Add Colleague").grid(row=0, column=0, padx=5, pady=5, columnspan=2)
 
-city_label = Label(left_frame, text="City:")
-city_label.grid(row=1, column=0, padx=5, pady=5)
+country_label = Label(left_frame, text="Country:")
+country_label.grid(row=1, column=0, padx=5, pady=5)
 
-city_text = str()
-city_entry = Entry(left_frame, textvariable=city_text)
-city_entry.grid(row=1, column=1, padx=5, pady=5)
+country_text = StringVar()
+country_entry = Entry(left_frame, textvariable=country_text)
+country_entry.grid(row=1, column=1, padx=5, pady=5)
 
 name_label = Label(left_frame, text="Name:")
 name_label.grid(row=2, column=0, padx=5, pady=5)
 
-name_text = StringVar(root)
+name_text = StringVar()
 name_entry = Entry(left_frame, textvariable=name_text)
 name_entry.grid(row=2, column=1, padx=5, pady=5)
 
