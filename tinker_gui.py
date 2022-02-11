@@ -1,4 +1,5 @@
 from tkinter import *
+from newsweather import news, weather
 
 
 def add_colleague_to_dict(name, city):
