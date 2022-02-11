@@ -12,12 +12,12 @@ def weather(country, uk=""):
             country = "united_states_of_america"
         url = "https://www.metoffice.gov.uk/weather/world/"+ country +"/list"
         print(url)
+        page = urlopen(url)
     return "passed"
 
 def news(country):
     output1 = "Recent news in " + country
 
     return output1
-weather("United States of America")
 search="Weather in the New York"
 URL ="https://openweathermap.org/city/5128581"
