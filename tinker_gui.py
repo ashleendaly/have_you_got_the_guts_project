@@ -40,6 +40,7 @@ left_frame.grid(row=0, column=0,  padx=20, pady=5)
 right_frame = Frame(root, width=650, height=400)
 right_frame.grid(row=0, column=1, padx=10, pady=5)
 
+# ------- LEFT FRAME ----------
 # ---- Add Colleague
 add_colleague_label = Label(left_frame, text="Add Colleague").grid(row=0, column=0, padx=5, pady=5, columnspan=2)
 
@@ -69,7 +70,12 @@ clicked = StringVar()
 colleague_drop = OptionMenu(left_frame, clicked, colleagues)
 colleague_drop.grid(row=5, column=0, padx=10, pady=5, columnspan=2)
 
-# ---- Display News and Weather
+# ------- Right FRAME ----------
+# ---- Display Weather
+
+
+# ---- Display News
+
 
 
 
