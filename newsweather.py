@@ -1,5 +1,5 @@
 from urllib.request import urlopen, Request
-from country_list import countries_for_language
+#from country_list import countries_for_language
 import string
 import mechanicalsoup as ms
 import pycountry
