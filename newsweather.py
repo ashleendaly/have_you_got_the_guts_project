@@ -1,6 +1,16 @@
 from urllib.request import urlopen, Request
+from country_list import countries_for_language
+import mechanicalsoup as ms
 
+print(countries_for_language('en')[0][1])
+
+countries = []
+for i in range(len(countries_for_language('en'))):
+    countries += [countries_for_language('en')[i][1]]
+
+print(countries)
 def weather(country, location=""):
+    browser = ms.Browser()
     if type(country) != str or type(location) != str:
         return "Parameter(s) entered is not a string. Please enter a string"
     country = country.title()
@@ -36,7 +46,13 @@ def news(country):
         return "Parameter entered is not a string. Please enter a string"
     country = country.title()
     print("Recent news in " + country)
-
+    country = country.lower()
+    if country=="uk" or country=="united kingdom":
+        url = "https://www.bbc.co.uk/news/uk"
+    elif country=="scotland" or country=="england" or country=="wales":
+        url = "https://www.bbc.co.uk/news/"+country
+    elif country == "northern ireland":
+        url = "https://www.bbc.co.uk/news/northern_ireland"
     return
 
 weather("usa", "detroit")
