@@ -1,9 +1,13 @@
 from tkinter import *
 from urllib.request import urlopen
+from country_list import countries_for_language
 from newsweather import news, weather
 
 colleagues = []
 
+countries = []
+for i in range(len(countries_for_language('en'))):
+    countries += [countries_for_language('en')[i][1]]
 
 def add_colleague_to_dict():
     pass
