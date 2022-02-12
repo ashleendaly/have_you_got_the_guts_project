@@ -1,3 +1,4 @@
+import os
 from tkinter import *
 from urllib.request import urlopen
 from newsweather import weather, news
