@@ -138,5 +138,5 @@ def news(country):
 
 print(news('usa'))
 
-#s = weather("pAkistan", "karachi")
+#s = weather("pakistan", "karachi")
 #print(s)
