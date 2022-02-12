@@ -61,16 +61,7 @@ country_entry = Entry(left_frame, textvariable=country_text)
 country_entry.grid(row=1, column=1, padx=5, pady=5)
 
 
-
-
-
-
-
-
-
-
-
-
+//add colleague button
 add_colleague_button = Button(left_frame, text="Add", command=add_colleague_to_dict)
 add_colleague_button.grid(row=3, column=0, padx=5, pady=5, columnspan=2)
 
