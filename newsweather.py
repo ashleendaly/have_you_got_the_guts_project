@@ -8,6 +8,7 @@ for i in range(len(countries_for_language('en'))):
 
 browser = ms.Browser()
 
+# takes country name adn exact location and 
 def weather(country, location):
     if type(country) != str or type(location) != str or len(country)==0 or len(location)==0:
         return "Invalid parameter(s) for program. Please enter valid parameters"
@@ -39,6 +40,7 @@ def weather(country, location):
             address = "https://www.metoffice.gov.uk" + address
             return address
 
+# takes country and returns link from bbc which contains data on the recent news
 def news(country):
     if type(country) != str or len(country)==0:
         return "Invalid parameter for program. Please enter valid parameters"
@@ -73,10 +75,10 @@ def news(country):
             text = text.strip().lower()
             if text in world_headers:
                 if country in text:
-                    address = "https://www.bbc.co.uk/"+address
+                    address = "https://www.bbc.co.uk"+address
                     return address
 
-#print(news('australia'))
+print(news('asia'))
 
-#s = weather("usa", "detroit")
-#print(s)
+s = weather("luxembourg", "ettelbruck")
+print(s)
