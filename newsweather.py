@@ -1,10 +1,7 @@
 from urllib.request import urlopen, Request
 #from country_list import countries_for_language
-import string
 import mechanicalsoup as ms
 import pycountry
-
-upr_alpha = list(string.ascii_uppercase)
 
 # sets up browser to use to access the html of the website
 browser = ms.Browser()
@@ -45,25 +42,58 @@ def weather(country, city):
     
     #finds info about the weather given the url
     def get_info(url):
+        inform = []
+        inform2 = []
+        print("Getting info...")
         req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
         info_page = browser.get(url)
         info_html = info_page.soup
-        infos = info_html.select('div')
+        infos = info_html.select('span')
         for info in infos:
-            classes = info['class']
             text = info.text
-            text = text.strip().lower()
-            print(text)
+            if len(text)!=0:
+                text = text.replace("\n", '')
+                if text != '-' or text != '|':
+                    if '\u2009' in text:
+                        text = text.replace('\u2009', '')
+                    inform += [text]
+        infos = info_html.select('div')
+        weather_types = ['cloudy', 'some clouds', 'rain shwrs', 'light rain', 'clear', 'mod. rain']
+        weth_types = []
+        for info in infos:
+            text = info.text
+            text = text.replace("\n", '')
+            if len(text)!=0 or text != '-':
+                if text in weather_types:
+                    weth_types += [text]
+                inform2 += [text]
+        index = inform.index('Temp')
+        temps = inform[index+3:index+8]
+        weather = weth_types[36:41]
+        times=[]
+        for info in inform:
+            if info.endswith('AM') or info.endswith('PM'):
+                if len(info)>2:
+                    times += [info]
+                    if len(times)==5:
+                        break
+        output = {}
+        for i in range(len(times)):
+            output[times[i]] = [temps[i]+"°C", weather[i]]
+        return output
+        
+    
     address = find_link(url, city)
     if address is None:
         url = url + "/locations/" + city[0].upper()
         address = find_link(url, city)
         if address is None:
             return ""
-        get_info(address)
-        return address
+        result = get_info(address)
+        return result
     else:
-        return address
+        result = get_info(address)
+        return result
 
 # takes country and returns link from bbc which contains data on the recent news
 def news(country):
@@ -72,9 +102,8 @@ def news(country):
     country = country.title()
     print("Recent news in " + country)
     country = country.lower()
-    home_headers = ['england', 'n. ireland', 'scotland', 'wales']
-    if country in home_headers:
-        url = "https://www.bbc.co.uk/news"
+    
+    def get_url(url, worldH=None):
         req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
         log_page = browser.get(url)
         log_html = log_page.soup
@@ -83,27 +112,31 @@ def news(country):
             address = link['href']
             text = link.text
             text = text.strip().lower()
+            if worldH is not None:
+                if text in world_headers:
+                    if country in text:
+                        address = "https://www.bbc.co.uk"+address
+                        return address
             if text in country:
-                print(text+" "+address)
+                address = "https://www.bbc.co.uk"+address
+                return address
+    
+    if country == 'northern ireland':
+        country = 'n. ireland'
+    home_headers = ['england', 'n. ireland', 'scotland', 'wales']
+    if country in home_headers or (country=='uk' or country=='united kingdom'):
+        url = "https://www.bbc.co.uk/news"
+        address = get_url(url)
+        return address
     else:
         if country == 'usa':
             country = 'us '
         world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
         url = "https://www.bbc.co.uk/news/world"
-        req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
-        log_page = browser.get(url)
-        log_html = log_page.soup
-        links = log_html.select('a')
-        for link in links:
-            address = link['href']
-            text = link.text
-            text = text.strip().lower()
-            if text in world_headers:
-                if country in text:
-                    address = "https://www.bbc.co.uk"+address
-                    return address
+        address = get_url(url, world_headers)
+        return address
 
-#print(news('asia'))
+print(news('usa'))
 
-s = weather("uk", "london")
-print(s)
+#s = weather("pakistan", "karachi")
+#print(s)
