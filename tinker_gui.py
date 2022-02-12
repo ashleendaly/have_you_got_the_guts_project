@@ -7,6 +7,8 @@ from PIL import Image, ImageTk
 
 colleagues = []
 
+crt_path = os.getcwd()
+
 # Adds colleague to list
 def add_colleague_to_list():
 
@@ -41,7 +43,7 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 # ------- LEFT FRAME ----------
 
 #Load logo
-Logo = Image.open("/Users/user/Desktop/have_you_got_the_guts_project/Logo.png")
+Logo = Image.open(crt_path+"/Logo.png")
 
 #resize logo
 resized = Logo.resize((300, 100), Image.ANTIALIAS)
@@ -96,7 +98,7 @@ colleague_drop.grid(row=7, column=0, pady=5, columnspan=2)
 image = Label(root, bitmap="")
 image.grid(row=0, column=1, pady=5, columnspan=2)
 
-image['bitmap'] = "/Users/user/Desktop/have_you_got_the_guts_project/Earth.png"
+image['bitmap'] = crt_path+"/Earth.png"
 
 
 
