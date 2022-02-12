@@ -4,15 +4,14 @@ import mechanicalsoup as ms
 
 print(countries_for_language('en')[0][1])
 
-countries = []
+lwrcase_countries = []
 for i in range(len(countries_for_language('en'))):
-    countries += [countries_for_language('en')[i][1]]
+    lwrcase_countries += [countries_for_language('en')[i][1]]
 
-print(countries)
-def weather(country, location=""):
+def weather(country, location):
     browser = ms.Browser()
-    if type(country) != str or type(location) != str:
-        return "Parameter(s) entered is not a string. Please enter a string"
+    if type(country) != str or type(location) != str or len(country)==0 or len(location)==0:
+        return "Invalid parameter(s) for program. Please enter a string"
     country = country.title()
     string = "Weather in " + country
     if len(location)!=0:
@@ -27,22 +26,24 @@ def weather(country, location=""):
     
     if country=="uk":
         url = "https://www.metoffice.gov.uk/weather/forecast/uk"
-    elif len(location)!=0:
-        url = "https://www.metoffice.gov.uk/weather/world/"+ country +"/list"
     else:
-        url = "https://www.metoffice.gov.uk/weather/world/"+ country
+        url = "https://www.metoffice.gov.uk/weather/world/"+ country +"/list"
+        location = location.lower()
     req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
     print(url)
-    page = urlopen(req).read().decode("utf-8")
-    if len(location)!= 0:
-        location_index = page.find(location)
-        print(location_index)
-        loc_start_index = location_index + len(location)
-        print(loc_start_index)
-    return "passed"
+    log_page = browser.get(url)
+    log_html = log_page.soup
+    links = log_html.select('a')
+    for link in links:
+        address = link['href']
+        text = link.text
+        text = text.strip().lower()
+        if text == location:
+            address = "https://www.metoffice.gov.uk" + address
+            return address
 
 def news(country):
-    if type(country) != str:
+    if type(country) != str or len(country)==0:
         return "Parameter entered is not a string. Please enter a string"
     country = country.title()
     print("Recent news in " + country)
