@@ -100,20 +100,7 @@ image['bitmap'] = "/Users/user/Desktop/have_you_got_the_guts_project/Earth.png"
 
 
 # ---- Display Weather
-# Weather in Colleagues country
-def weather(country, location):
-    if type(country) != str or type(city) != str or len(country)==0 or len(city)==0:
-        return "Invalid city(s) for program. Please enter a city of your collegaue
-    country = country.title()
-    string = "Weather in " + country
-    city = city.title()
-    string += ", "+city
-    print(string)
-    country = country.lower()
-    if country=="France" or country==“France:"
-        country = “France”
-    elif country=="usa" or country=="united states" or country == "united states of america":
-        country = "united_states_of_america"
+
 
 # ---- Display News
 
