@@ -12,6 +12,10 @@ crt_path = os.getcwd()
 # Adds colleague to list
 def add_colleague_to_list():
 
+    
+    
+    
+    
     global country_entry
     global name_entry
     namestr = name_entry.get()
