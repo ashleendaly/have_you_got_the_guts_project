@@ -113,13 +113,24 @@ def news(country):
             text = link.text
             text = text.strip().lower()
             if worldH is not None:
-                if text in world_headers:
+                if text in worldH:
                     if country in text:
                         address = "https://www.bbc.co.uk"+address
                         return address
             if text in country:
                 address = "https://www.bbc.co.uk"+address
                 return address
+    
+    def get_info(url):
+        req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
+        log_page = browser.get(url)
+        log_html = log_page.soup
+        links = log_html.select('h3')
+        for link in links:
+            address = link['href']
+            text = link.text
+            print(text)
+        return 1
     
     if country == 'northern ireland':
         country = 'n. ireland'
@@ -134,9 +145,10 @@ def news(country):
         world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
         url = "https://www.bbc.co.uk/news/world"
         address = get_url(url, world_headers)
+        get_info(address)
         return address
 
 print(news('usa'))
 
-#s = weather("pakistan", "karachi")
+#s = weather("pAkistan", "karachi")
 #print(s)
