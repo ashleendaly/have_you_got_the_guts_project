@@ -1,10 +1,8 @@
 from email.headerregistry import Address
 from urllib.request import urlopen, Request
 import requests
-#from country_list import countries_for_language
 from bs4 import BeautifulSoup
 import mechanicalsoup as ms
-import pycountry
 
 # sets up browser to use to access the html of the website
 browser = ms.Browser()
