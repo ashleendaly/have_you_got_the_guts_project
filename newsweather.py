@@ -6,16 +6,12 @@ import pycountry
 
 upr_alpha = list(string.ascii_uppercase)
 
-lwrcase_countries = []
-for i in range(len(countries_for_language('en'))):
-    lwrcase_countries += [countries_for_language('en')[i][1]]
-
 # sets up browser to use to access the html of the website
 browser = ms.Browser()
 
 # takes country name and city and returns url for weather via weather-forecast.com
 def weather(country, city):
-    if type(country) != str or type(city) != str or len(country)==0 or len(city)==0 or (country not in lwrcase_countries):
+    if type(country) != str or type(city) != str or len(country)==0 or len(city)==0:
         return "Invalid parameter(s) for program. Please enter valid parameters"
     country = country.title()
     string = "Weather in " + country
@@ -31,6 +27,8 @@ def weather(country, city):
     country_url = country.replace(" ", "-")
     country_url = "countries/"+country_url
     url = url+country_url
+    
+    #finds url that contains the weather information
     def find_link(url, city):
         city = city.lower()
         req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
@@ -44,19 +42,32 @@ def weather(country, city):
             if text == city:
                 address = "https://www.weather-forecast.com/" + address
                 return address
+    
+    #finds info about the weather given the url
+    def get_info(url):
+        req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
+        info_page = browser.get(url)
+        info_html = info_page.soup
+        infos = info_html.select('div')
+        for info in infos:
+            classes = info['class']
+            text = info.text
+            text = text.strip().lower()
+            print(text)
     address = find_link(url, city)
     if address is None:
         url = url + "/locations/" + city[0].upper()
         address = find_link(url, city)
         if address is None:
             return ""
+        get_info(address)
         return address
     else:
         return address
 
 # takes country and returns link from bbc which contains data on the recent news
 def news(country):
-    if type(country) != str or len(country)==0 or (country not in lwrcase_countries):
+    if type(country) != str or len(country)==0:
         return "Invalid parameter for program. Please enter valid parameters"
     country = country.title()
     print("Recent news in " + country)
@@ -94,5 +105,5 @@ def news(country):
 
 #print(news('asia'))
 
-#s = weather("afghanistan", "fayzabad")
-#print(s)
+s = weather("uk", "london")
+print(s)
