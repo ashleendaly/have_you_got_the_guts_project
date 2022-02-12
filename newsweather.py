@@ -102,9 +102,8 @@ def news(country):
     country = country.title()
     print("Recent news in " + country)
     country = country.lower()
-    home_headers = ['england', 'n. ireland', 'scotland', 'wales']
-    if country in home_headers:
-        url = "https://www.bbc.co.uk/news"
+    
+    def get_url(url, worldH=None):
         req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
         log_page = browser.get(url)
         log_html = log_page.soup
@@ -113,27 +112,31 @@ def news(country):
             address = link['href']
             text = link.text
             text = text.strip().lower()
+            if worldH is not None:
+                if text in world_headers:
+                    if country in text:
+                        address = "https://www.bbc.co.uk"+address
+                        return address
             if text in country:
-                print(text+" "+address)
+                address = "https://www.bbc.co.uk"+address
+                return address
+    
+    if country == 'northern ireland':
+        country = 'n. ireland'
+    home_headers = ['england', 'n. ireland', 'scotland', 'wales']
+    if country in home_headers or (country=='uk' or country=='united kingdom'):
+        url = "https://www.bbc.co.uk/news"
+        address = get_url(url)
+        return address
     else:
         if country == 'usa':
             country = 'us '
         world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
         url = "https://www.bbc.co.uk/news/world"
-        req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
-        log_page = browser.get(url)
-        log_html = log_page.soup
-        links = log_html.select('a')
-        for link in links:
-            address = link['href']
-            text = link.text
-            text = text.strip().lower()
-            if text in world_headers:
-                if country in text:
-                    address = "https://www.bbc.co.uk"+address
-                    return address
+        address = get_url(url, world_headers)
+        return address
 
-#print(news('asia'))
+print(news('usa'))
 
-s = weather("pAkistan", "karachi")
-print(s)
+#s = weather("pAkistan", "karachi")
+#print(s)
