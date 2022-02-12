@@ -10,6 +10,7 @@ for i in range(len(countries_for_language('en'))):
     countries += [countries_for_language('en')[i][1]]
 
 
+# Adds colleague to list
 def add_colleague_to_list():
 
     global country_entry
@@ -17,10 +18,15 @@ def add_colleague_to_list():
     namestr = name_entry.get()
     countrystr = country_entry.get()
 
-    
+    colleagues.append((namestr, countrystr))
+
     confirmation_label.config(text=f"{namestr} has been added")
     pass
 
+
+# removes colleague from list
+def remove_colleague_to_list():
+    pass
 
 # ---- Create Root Window
 root = Tk()
@@ -56,6 +62,12 @@ add_colleague_button.grid(row=3, column=0, padx=5, pady=5, columnspan=2)
 
 confirmation_label = Label(left_frame, text="")
 confirmation_label.grid(row=4, column=0, padx=5, pady=5, columnspan=2)
+
+
+# ---- Select Colleague Drop Down Menu
+clicked = StringVar()
+colleague_drop = OptionMenu(left_frame, clicked, colleagues)
+colleague_drop.grid(row=5, column=0, padx=10, pady=5, columnspan=2)
 
 # ---- Display News and Weather
 
