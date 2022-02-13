@@ -184,7 +184,7 @@ def clear_label_image():
 
 
 # ---- Display News
-world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
+world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada', 'uk']
 # news
 def display_news(name):
     home_headers = ['england', 'northern ireland', 'scotland', 'wales']
@@ -204,9 +204,13 @@ def display_news(name):
 
 # ---- Display Weather
 def display_weather(name):
-    n_index = colleagues.index(name)
-    country = colleagues[n_index+2]
-    city = colleagues[n_index+1]
+    for info in colleagues:
+        print(info)
+        if name in info:
+            n_index = info.index(name)
+            country = info[n_index+2]
+            city = info[n_index+1]
+            break
     output = weather(country, city)
     return output
 
@@ -231,7 +235,7 @@ def callback(*colleagues):
     bg_color_news = "#a6a8a6"
 
     # frame that displays the weather in the top right
-    Weather_Display = Label(right_frame, text=display_weather(clicked.get()[0]), font=("times new roman", 30, "bold"), bg=bg_color_weather,
+    Weather_Display = Label(right_frame, text=display_weather(colleagues[-1]), font=("times new roman", 30, "bold"), bg=bg_color_weather,
         fg=basic_font_color, bd=10, relief=GROOVE)
     Weather_Display.place(x=80, y=10, width=480, relheight=0.4)
 
