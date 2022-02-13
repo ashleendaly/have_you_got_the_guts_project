@@ -145,7 +145,7 @@ def news(country):
         world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
         url = "https://www.bbc.co.uk/news/world"
         address = get_url(url, world_headers)
-        get_info(address)
+        #get_info(address)
         return address
 
 print(news('usa'))
