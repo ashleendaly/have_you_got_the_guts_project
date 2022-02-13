@@ -45,12 +45,12 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 im = Label(root, bitmap="")
 im.grid(row=0, column=1, pady=5, columnspan=2)
 
-im['bitmap'] = crt_path+"/Earth.png"
+im['bitmap'] = crt_path+"/Desktop/have_you_got_the_guts_project/Earth.png"
 
 # ------- LEFT FRAME ----------
 
 #Load logo
-Logo = Image.open(crt_path+"/Logo.png")
+Logo = Image.open(crt_path+"/Desktop/have_you_got_the_guts_project/Logo.png")
 
 #resize logo
 resized = Logo.resize((300, 100), Image.ANTIALIAS)
@@ -155,7 +155,7 @@ def callback(*choices):
 
 
 choices = ['op1', 'op2']
-
+#*colleagues
 
 colleague_drop = OptionMenu(left_frame, clicked, *choices, command=callback)
 colleague_drop.grid(row=8, column=0, pady=5, columnspan=2)
@@ -174,8 +174,4 @@ def on_closing():
         root.destroy()
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
-root.mainloop()
-
-
-
 root.mainloop()
