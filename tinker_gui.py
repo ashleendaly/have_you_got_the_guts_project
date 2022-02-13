@@ -3,6 +3,8 @@ from tkinter import *
 from urllib.request import urlopen
 from newsweather import weather, news
 from PIL import Image, ImageTk
+import pycountry as pc
+from countrygroups import EUROPEAN_UNION
 #from country_list import countries_for_language
 
 colleagues = []
@@ -12,12 +14,14 @@ crt_path = os.getcwd()
 # Adds colleague to list
 def add_colleague_to_list():
 
+    global city_entry
     global country_entry
     global name_entry
     namestr = name_entry.get()
+    citystr = city_entry.get()
     countrystr = country_entry.get()
 
-    colleagues.append((namestr, countrystr))
+    colleagues.append((namestr, citystr, countrystr))
 
     confirmation_label.config(text=f"Details for {namestr} have been added")
     pass
@@ -74,11 +78,11 @@ def on_click_cit(event):
     # make the callback only work once
     city_entry.unbind('<Button-1>', on_click_city)
 
-#city_label = Label(left_frame, text="City:")
-#city_label.grid(row=2, column=0, pady=5)
+city_label = Label(left_frame, text="City:")
+city_label.grid(row=2, column=0, pady=5)
 
-location_label = Label(left_frame, text="Location:")
-location_label.grid(row=2, column=0, pady=5)
+#location_label = Label(left_frame, text="Location:")
+#location_label.grid(row=2, column=0, pady=5)
 
 city_entry = Entry(left_frame)
 city_entry.insert(0, "Insert City...")
@@ -95,8 +99,8 @@ def on_click_count(event):
     # make the callback only work once
     country_entry.unbind('<Button-1>', on_click_country)
 
-#country_label = Label(left_frame, text="Country:")
-#country_label.grid(row=3, column=0, pady=5)
+country_label = Label(left_frame, text="Country:")
+country_label.grid(row=3, column=0, pady=5)
 
 country_entry = Entry(left_frame)
 country_entry.insert(0, "Insert Country...")
@@ -136,11 +140,26 @@ image['bitmap'] = crt_path+"/Earth.png"
 
 
 # ---- Display Weather
-
+def display_weather(name):
+    n_index = colleagues.index(name)
+    country = colleagues[n_index+2]
+    city = colleagues[n_index+1]
+    output = weather(country, city)
+    return output
 
 
 # ---- Display News
-
+def display_news(name):
+    world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
+    home_headers = ['england', 'northern ireland', 'scotland', 'wales']
+    n_index = colleagues.index(name)
+    country = colleagues[n_index+2]
+    if country.lower() in home_headers or country.lower() == 'united kingdom' or country.lower() == 'uk':
+        country = 'united kingdom'
+    elif country.title() in EUROPEAN_UNION.names:
+        country = 'europe'
+    output = news(country)
+    return output
 
 
 root.mainloop()

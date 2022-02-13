@@ -3,6 +3,7 @@ from urllib.request import urlopen, Request
 import requests
 from bs4 import BeautifulSoup
 import mechanicalsoup as ms
+from countrygroups import EUROPEAN_UNION
 
 # sets up browser to use to access the html of the website
 browser = ms.Browser()
@@ -144,6 +145,8 @@ def news(country):
             start += len(tofind)
             end = cover.find('</h3>')
             titles += [cover[start:end]]
+        if len(links)==0 or len(titles)==0:
+            return None
         for i in range(5):
             output[titles[i]] = links[i]
         return output
@@ -166,7 +169,6 @@ def news(country):
         world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
         url = "https://www.bbc.co.uk/news/world"
         address = get_url(url, world_headers)
-        print(address)
         if country == 'us ':
             country = 'us'
         output = get_news(address)
