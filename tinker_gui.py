@@ -75,14 +75,14 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 im = Label(root, bitmap="")
 im.grid(row=0, column=1, pady=5, columnspan=2)
 
-im['bitmap'] = crt_path+"/Desktop/have_you_got_the_guts_project/Earth.png"
+im['bitmap'] = crt_path+"/Earth.png"
 
 # ------- LEFT FRAME ----------
 # refresh button
 refresh_button = Button(left_frame, text='Refresh', command=refresh).grid(row=3, column=2, pady=5)
 
 #Load logo
-Logo = Image.open(crt_path+"/Desktop/have_you_got_the_guts_project/Logo.png")
+Logo = Image.open(crt_path+"/Logo.png")
 
 #resize logo
 resized = Logo.resize((300, 100), Image.ANTIALIAS)
