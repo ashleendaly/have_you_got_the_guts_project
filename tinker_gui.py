@@ -6,6 +6,8 @@ from tkinter import messagebox
 from urllib.request import urlopen
 from newsweather import weather, news
 from PIL import Image, ImageTk
+import pycountry_convert as pc
+from countrygroups import EUROPEAN_UNION
 #from country_list import countries_for_language
 
 #empty list of colleagues
@@ -207,11 +209,31 @@ colleague_drop.grid(row=9, column=0, pady=5, columnspan=2)
 
 
 # ---- Display Weather
-
-
+def display_weather(name):
+    n_index = colleagues.index(name)
+    country = colleagues[n_index+2]
+    city = colleagues[n_index+1]
+    output = weather(country, city)
+    return output
 
 # ---- Display News
-
+def display_news(name):
+    africa = []
+    world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
+    home_headers = ['england', 'northern ireland', 'scotland', 'wales']
+    n_index = colleagues.index(name)
+    country = colleagues[n_index+2]
+    if country.lower() in home_headers or country.lower() == 'united kingdom' or country.lower() == 'uk':
+        country = 'united kingdom'
+    elif country.title() in EUROPEAN_UNION.names:
+        country = 'europe'
+    elif country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
+        country = 'usa'
+    elif country.lower() == 'canada':
+        pass
+    
+    output = news(country)
+    return output
 
 
 def on_closing():
