@@ -58,6 +58,7 @@ label.place(x=40, y=15)
 # ---- Add Colleague
 add_colleague_label = Label(left_frame, text="Add Colleague").grid(row=0, column=0, pady=5, columnspan=2)
 
+# ---- name information ----
 name_label = Label(left_frame, text="Name:")
 name_label.grid(row=1, column=0, pady=5)
 
@@ -65,30 +66,62 @@ name_entry = Entry(left_frame)
 name_entry.focus_set()
 name_entry.grid(row=1, column=1, pady=5)
 
-country_label = Label(left_frame, text="Country:")
-country_label.grid(row=2, column=0, pady=5)
+# ---- city information ----
+def on_click_cit(event):
+    city_entry.configure(state=NORMAL)
+    city_entry.delete(0, END)
+
+    # make the callback only work once
+    city_entry.unbind('<Button-1>', on_click_city)
+
+#city_label = Label(left_frame, text="City:")
+#city_label.grid(row=2, column=0, pady=5)
+
+location_label = Label(left_frame, text="Location:")
+location_label.grid(row=2, column=0, pady=5)
+
+city_entry = Entry(left_frame)
+city_entry.insert(0, "Insert City...")
+city_entry.focus_set()
+city_entry.grid(row=2, column=1, padx=5, pady=5)
+
+on_click_city = city_entry.bind('<Button-1>', on_click_cit)
+
+# ---- country information ----
+def on_click_count(event):
+    country_entry.configure(state=NORMAL)
+    country_entry.delete(0, END)
+
+    # make the callback only work once
+    country_entry.unbind('<Button-1>', on_click_country)
+
+#country_label = Label(left_frame, text="Country:")
+#country_label.grid(row=3, column=0, pady=5)
 
 country_entry = Entry(left_frame)
+country_entry.insert(0, "Insert Country...")
 country_entry.focus_set()
-country_entry.grid(row=2, column=1, padx=5, pady=5)
+country_entry.grid(row=3, column=1, padx=5, pady=5)
 
+on_click_country = country_entry.bind('<Button-1>', on_click_count)
+
+# ---- add button ----
 add_colleague_button = Button(left_frame, text="Add", command=add_colleague_to_list)
-add_colleague_button.grid(row=3, column=0, pady=5, columnspan=2)
+add_colleague_button.grid(row=4, column=0, pady=5, columnspan=2)
 
-
+# ---- confirmation ----
 confirmation_label = Label(left_frame, text="")
-confirmation_label.grid(row=4, column=0, pady=5, columnspan=2)
-
-space = Label(left_frame, text="")
-space.grid(row=5, column=0, pady=20)
+confirmation_label.grid(row=5, column=0, pady=5, columnspan=2)
 
 
-# ---- Select Colleague Drop Down Menu
+# ---- Select Colleague Drop Down Menu ----
 
 existing_colleague_label = Label(left_frame, text="Select Existing Colleague")
 existing_colleague_label.grid(row=6, column=0, pady=5, columnspan=2)
 
 clicked = StringVar()
+clicked.set("Select...") # default value
+
 colleague_drop = OptionMenu(left_frame, clicked, colleagues)
 colleague_drop.grid(row=7, column=0, pady=5, columnspan=2)
 
@@ -103,23 +136,14 @@ image['bitmap'] = crt_path+"/Earth.png"
 
 
 # ---- Display Weather
-def weather(country, location):
-    if type(country) != str or type(city) != str or len(country)==0 or len(city)==0:
-        return "Invalid city(s) for program. Please enter a city of your collegaue
-    country = country.title()
-    string = "Weather in " + country
-    city = city.title()
-    string += ", "+city
-    print(string)
-    country = country.lower()
-    if country=="France" or country==“France:"
-        country = “France”
-    elif country=="usa" or country=="united states" or country == "united states of america":
-        country = "united_states_of_america"
 
 
 
 # ---- Display News
+
+
+
+root.mainloop()
 
 
 
