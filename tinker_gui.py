@@ -5,6 +5,7 @@ from tkinter import messagebox
 from urllib.request import urlopen
 from newsweather import weather, news
 from PIL import Image, ImageTk
+import pycountry_convert as pc
 from countrygroups import EUROPEAN_UNION
 
 #empty list of colleagues
@@ -33,6 +34,7 @@ def remove_colleague_to_list():
 
     global country_entry
     global name_entry
+    global city_entry
 
     namestr = name_entry.get()
     citystr = city_entry.get()
@@ -205,11 +207,19 @@ def display_news(name):
         country = 'united kingdom'
     elif country.title() in EUROPEAN_UNION.names:
         country = 'europe'
-    elif country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
+    if country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
         country = 'usa'
     elif country.lower() == 'canada':
         pass
-    
+    elif country.lower() == 'australia':
+        pass
+    else:
+        code = pc.country_name_to_country_alpha2(country.title(), cn_name_format="default")
+        cont_code = pc.country_alpha2_to_continent_code(code)
+        name = pc.convert_continent_code_to_continent_name(cont_code)
+        name = name.lower()
+        if name == 'south america':
+            country = 'latin america'
     output = news(country)
     return output
 
