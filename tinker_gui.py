@@ -1,22 +1,34 @@
 #imported modules
 import os
+import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 from urllib.request import urlopen
 from newsweather import weather, news
 from PIL import Image, ImageTk
-from countrygroups import EUROPEAN_UNION
+#from country_list import countries_for_language
 
 #empty list of colleagues
-colleagues = []
+colleagues = ['.']
 
 crt_path = os.getcwd()
+
+# refreshes the options in the option menu
+
+def refresh():
+    # Reset var and delete all old options
+    clicked.set('')
+    colleague_drop['menu'].delete(0, 'end')
+
+    # Insert list of refreshed colleagues
+    new_choices = colleagues
+    for choice in new_choices:
+        colleague_drop['menu'].add_command(label=choice[0], command=tk._setit(clicked, choice))
 
 # Adds colleague to list
 def add_colleague_to_list():
 
     global country_entry
-    global city_entry
     global name_entry
     namestr = name_entry.get()
     citystr = city_entry.get()
@@ -43,10 +55,11 @@ def remove_colleague_to_list():
     confirmation_label.config(text=f"Details for {namestr} have been removed")
     pass
 
+
 # ---- Create Root Window
 root = Tk()
 root.title("Remote Colleagues' Environment")
-root.geometry('900x500')
+root.geometry('1000x500')
 
 # ---- Create left and right frames
 
@@ -63,6 +76,9 @@ im.grid(row=0, column=1, pady=5, columnspan=2)
 im['bitmap'] = crt_path+"/Earth.png"
 
 # ------- LEFT FRAME ----------
+# refresh button
+refresh_button = Button(left_frame, text='Refresh', command=refresh).grid(row=3, column=2, pady=5)
+
 #Load logo
 Logo = Image.open(crt_path+"/Logo.png")
 
@@ -82,7 +98,7 @@ space = Label(left_frame, text="")
 space.grid(row=0, column=0, pady=0)
 
 # ---- Add Colleague
-add_colleague_label = Label(left_frame, text="Add/Remove Colleague").grid(row=1, column=1, pady=5, columnspan=2)
+add_colleague_label = Label(left_frame, text="Add/Remove Colleague").grid(row=1, column=0, pady=5, columnspan=3)
 
 # ---- name information ----
 name_label = Label(left_frame, text="Name:")
@@ -137,7 +153,7 @@ add_colleague_button.grid(row=5, column=0,pady=5, columnspan=2)
 
 # ---- remove button ----
 remove_colleague_button = Button(left_frame, text="Remove", command=remove_colleague_to_list)
-remove_colleague_button.grid(row=6, column=0, pady=5, columnspan=3)
+remove_colleague_button.grid(row=6, column=0, pady=5, columnspan=2)
 
 # ---- confirmation ----
 confirmation_label = Label(left_frame, text="")
@@ -154,64 +170,48 @@ clicked.set("Select...") # default value
 
 #colleagues
 
+# function for removing the image in the right hand side
 def clear_label_image():
         im.destroy()
 
+# function defined for when an existing colleague is selected
 def callback(*choices):
+
+    # ------- Right FRAME ----------
+
+    # image in the right frame is removed
     clear_label_image()
 
     # used to set position of text in desired location
     space = Label(left_frame, text="")
     space.grid(row=0, column=0, pady=8)
 
+    # sets colour of font and frames using HTML color codes
     basic_font_color = "#ccc4c4"
     bg_color_weather = "#00adad"
     bg_color_news = "#a6a8a6"
 
+    # frame that displays the weather in the top right
     Weather_Display = Label(right_frame, text="", font=("times new roman", 30, "bold"), bg=bg_color_weather,
         fg=basic_font_color, bd=10, relief=GROOVE)
     Weather_Display.place(x=80, y=10, width=480, relheight=0.4)
 
+    # frame that displays local news in the bottom right
     News_Display = Label(right_frame, text="", font=("times new roman", 30, "bold"), bg=bg_color_news,
         fg=basic_font_color, bd=10, relief=GROOVE)
     News_Display.place(x=80, y=250, width=480, relheight=0.4)
 
 
-
-choices = ['op1', 'op2']
-#*colleagues
-
-colleague_drop = OptionMenu(left_frame, clicked, *choices, command=callback)
+colleague_drop = OptionMenu(left_frame, clicked, *colleagues, command=callback)
 colleague_drop.grid(row=9, column=0, pady=5, columnspan=2)
 
-# ------- Right FRAME ----------
+
 # ---- Display Weather
-def display_weather(name):
-    n_index = colleagues.index(name)
-    country = colleagues[n_index+2]
-    city = colleagues[n_index+1]
-    output = weather(country, city)
-    return output
+
 
 
 # ---- Display News
-def display_news(name):
-    africa = []
-    world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
-    home_headers = ['england', 'northern ireland', 'scotland', 'wales']
-    n_index = colleagues.index(name)
-    country = colleagues[n_index+2]
-    if country.lower() in home_headers or country.lower() == 'united kingdom' or country.lower() == 'uk':
-        country = 'united kingdom'
-    elif country.title() in EUROPEAN_UNION.names:
-        country = 'europe'
-    elif country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
-        country = 'usa'
-    elif country.lower() == 'canada':
-        pass
-    
-    output = news(country)
-    return output
+
 
 
 def on_closing():
