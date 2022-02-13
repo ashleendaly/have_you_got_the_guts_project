@@ -9,7 +9,7 @@ from PIL import Image, ImageTk
 #from country_list import countries_for_language
 
 #empty list of colleagues
-colleagues = ['.']
+colleagues = [' ']
 
 crt_path = os.getcwd()
 
@@ -17,13 +17,13 @@ crt_path = os.getcwd()
 
 def refresh():
     # Reset var and delete all old options
-    clicked.set('')
+    clicked.set("Select...") # default value
     colleague_drop['menu'].delete(0, 'end')
 
     # Insert list of refreshed colleagues
     new_choices = colleagues
     for choice in new_choices:
-        colleague_drop['menu'].add_command(label=choice[0], command=tk._setit(clicked, choice))
+        colleague_drop['menu'].add_command(label=choice[0], command=callback)
 
 # Adds colleague to list
 def add_colleague_to_list():
@@ -73,14 +73,14 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 im = Label(root, bitmap="")
 im.grid(row=0, column=1, pady=5, columnspan=2)
 
-im['bitmap'] = crt_path+"/Earth.png"
+im['bitmap'] = crt_path+"/Desktop/have_you_got_the_guts_project/Earth.png"
 
 # ------- LEFT FRAME ----------
 # refresh button
 refresh_button = Button(left_frame, text='Refresh', command=refresh).grid(row=3, column=2, pady=5)
 
 #Load logo
-Logo = Image.open(crt_path+"/Logo.png")
+Logo = Image.open(crt_path+"/Desktop/have_you_got_the_guts_project/Logo.png")
 
 #resize logo
 resized = Logo.resize((300, 100), Image.ANTIALIAS)
@@ -181,6 +181,9 @@ def callback(*choices):
 
     # image in the right frame is removed
     clear_label_image()
+
+    for i in colleagues:
+        clicked.set("{}".format(i[0])) # default value
 
     # used to set position of text in desired location
     space = Label(left_frame, text="")
