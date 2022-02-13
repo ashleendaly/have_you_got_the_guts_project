@@ -42,7 +42,7 @@ def weather(country, city):
                 address = "https://www.weather-forecast.com/" + address
                 return address
     
-    #finds info about the weather given the url
+    #finds info about the weather given the url, returns dictionary containing time, temperature and weather
     def get_info(url):
         inform = []
         inform2 = []
@@ -105,6 +105,7 @@ def news(country):
     print("Recent news in " + country)
     country = country.lower()
     
+    # returns url address for the respected webpage to get info from
     def get_url(url, worldH=None):
         req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
         log_page = browser.get(url)
@@ -123,6 +124,7 @@ def news(country):
                 address = "https://www.bbc.co.uk"+address
                 return address
     
+    # returns a dictionary containing the news headline adn link to the news
     def get_news(url):
         output = {}
         links = []
