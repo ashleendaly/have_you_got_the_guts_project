@@ -32,11 +32,13 @@ def add_colleague_to_list():
 
     global country_entry
     global name_entry
+    global city_entry
+
     namestr = name_entry.get()
     citystr = city_entry.get()
     countrystr = country_entry.get()
 
-    colleagues.append((namestr, citystr, countrystr))
+    colleagues.append((namestr, citystr, countrystr, clicked_news.get()))
 
     confirmation_label.config(text=f"Details for {namestr} have been added")
     pass
@@ -47,12 +49,13 @@ def remove_colleague_to_list():
 
     global country_entry
     global name_entry
+    global city_entry
 
     namestr = name_entry.get()
     citystr = city_entry.get()
     countrystr = country_entry.get()
 
-    colleagues.remove((namestr, citystr, countrystr))
+    colleagues.remove((namestr, citystr, countrystr, clicked_news.get()))
 
     confirmation_label.config(text=f"Details for {namestr} have been removed")
     pass
@@ -170,14 +173,45 @@ existing_colleague_label.grid(row=8, column=0, pady=5, columnspan=2)
 clicked = StringVar()
 clicked.set("Select...") # default value
 
+clicked_news = StringVar()
+clicked_news.set("Select...") # default value
+
 #colleagues
 
 # function for removing the image in the right hand side
 def clear_label_image():
         im.destroy()
 
+
+# ---- Display News
+world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
+# news
+def display_news(name):
+    home_headers = ['england', 'northern ireland', 'scotland', 'wales']
+    n_index = colleagues.index(name)
+    country = colleagues[n_index+2]
+    if country.lower() in home_headers or country.lower() == 'united kingdom' or country.lower() == 'uk':
+        country = 'united kingdom'
+    elif country.title() in EUROPEAN_UNION.names:
+        country = 'europe'
+    elif country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
+        country = 'usa'
+    elif country.lower() == 'canada':
+        pass
+
+    output = news(country)
+    return output
+
+# ---- Display Weather
+def display_weather(name):
+    n_index = colleagues.index(name)
+    country = colleagues[n_index+2]
+    city = colleagues[n_index+1]
+    output = weather(country, city)
+    return output
+
 # function defined for when an existing colleague is selected
-def callback(*choices):
+def callback(*colleagues):
 
     # ------- Right FRAME ----------
 
@@ -197,12 +231,12 @@ def callback(*choices):
     bg_color_news = "#a6a8a6"
 
     # frame that displays the weather in the top right
-    Weather_Display = Label(right_frame, text="", font=("times new roman", 30, "bold"), bg=bg_color_weather,
+    Weather_Display = Label(right_frame, text=display_weather(clicked.get()[0]), font=("times new roman", 30, "bold"), bg=bg_color_weather,
         fg=basic_font_color, bd=10, relief=GROOVE)
     Weather_Display.place(x=80, y=10, width=480, relheight=0.4)
 
     # frame that displays local news in the bottom right
-    News_Display = Label(right_frame, text="", font=("times new roman", 30, "bold"), bg=bg_color_news,
+    News_Display = Label(right_frame, text=display_news(clicked.get()[0]), font=("times new roman", 30, "bold"), bg=bg_color_news,
         fg=basic_font_color, bd=10, relief=GROOVE)
     News_Display.place(x=80, y=250, width=480, relheight=0.4)
 
@@ -210,34 +244,8 @@ def callback(*choices):
 colleague_drop = OptionMenu(left_frame, clicked, *colleagues, command=callback)
 colleague_drop.grid(row=9, column=0, pady=5, columnspan=2)
 
-
-# ---- Display Weather
-def display_weather(name):
-    n_index = colleagues.index(name)
-    country = colleagues[n_index+2]
-    city = colleagues[n_index+1]
-    output = weather(country, city)
-    return output
-
-# ---- Display News
-def display_news(name):
-    africa = []
-    world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
-    home_headers = ['england', 'northern ireland', 'scotland', 'wales']
-    n_index = colleagues.index(name)
-    country = colleagues[n_index+2]
-    if country.lower() in home_headers or country.lower() == 'united kingdom' or country.lower() == 'uk':
-        country = 'united kingdom'
-    elif country.title() in EUROPEAN_UNION.names:
-        country = 'europe'
-    elif country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
-        country = 'usa'
-    elif country.lower() == 'canada':
-        pass
-    
-    output = news(country)
-    return output
-
+continent_drop = OptionMenu(left_frame, clicked_news, *world_headers)
+continent_drop.grid(row=4, column=2, pady=5, columnspan=2)
 
 def on_closing():
     if messagebox.askokcancel("Quit", "Would you like to exit the programme?"):
