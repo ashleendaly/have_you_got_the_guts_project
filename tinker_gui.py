@@ -1,3 +1,4 @@
+#imported modules
 import os
 from tkinter import *
 from tkinter import messagebox
@@ -6,6 +7,7 @@ from newsweather import weather, news
 from PIL import Image, ImageTk
 #from country_list import countries_for_language
 
+#empty list of colleagues
 colleagues = []
 
 crt_path = os.getcwd()
@@ -16,9 +18,10 @@ def add_colleague_to_list():
     global country_entry
     global name_entry
     namestr = name_entry.get()
+    citystr = city_entry.get()
     countrystr = country_entry.get()
 
-    colleagues.append((namestr, countrystr))
+    colleagues.append((namestr, citystr, countrystr))
 
     confirmation_label.config(text=f"Details for {namestr} have been added")
     pass
@@ -26,6 +29,17 @@ def add_colleague_to_list():
 
 # removes colleague from list
 def remove_colleague_to_list():
+
+    global country_entry
+    global name_entry
+
+    namestr = name_entry.get()
+    citystr = city_entry.get()
+    countrystr = country_entry.get()
+
+    colleagues.remove((namestr, citystr, countrystr))
+
+    confirmation_label.config(text=f"Details for {namestr} have been removed")
     pass
 
 # ---- Create Root Window
@@ -45,12 +59,11 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 im = Label(root, bitmap="")
 im.grid(row=0, column=1, pady=5, columnspan=2)
 
-im['bitmap'] = crt_path+"/Desktop/have_you_got_the_guts_project/Earth.png"
+im['bitmap'] = crt_path+"/Earth.png"
 
 # ------- LEFT FRAME ----------
-
 #Load logo
-Logo = Image.open(crt_path+"/Desktop/have_you_got_the_guts_project/Logo.png")
+Logo = Image.open(crt_path+"/Logo.png")
 
 #resize logo
 resized = Logo.resize((300, 100), Image.ANTIALIAS)
@@ -62,8 +75,13 @@ label = Label(
     image=new_Logo)
 label.place(x=40, y=15)
 
+# ---- space ----
+# used to set position of text in desired location
+space = Label(left_frame, text="")
+space.grid(row=0, column=0, pady=0)
+
 # ---- Add Colleague
-add_colleague_label = Label(left_frame, text="Add Colleague").grid(row=1, column=0, pady=5, columnspan=2)
+add_colleague_label = Label(left_frame, text="Add/Remove Colleague").grid(row=1, column=1, pady=5, columnspan=2)
 
 # ---- name information ----
 name_label = Label(left_frame, text="Name:")
@@ -114,17 +132,21 @@ on_click_country = country_entry.bind('<Button-1>', on_click_count)
 
 # ---- add button ----
 add_colleague_button = Button(left_frame, text="Add", command=add_colleague_to_list)
-add_colleague_button.grid(row=5, column=0, pady=5, columnspan=2)
+add_colleague_button.grid(row=5, column=0,pady=5, columnspan=2)
+
+# ---- remove button ----
+remove_colleague_button = Button(left_frame, text="Remove", command=remove_colleague_to_list)
+remove_colleague_button.grid(row=6, column=0, pady=5, columnspan=3)
 
 # ---- confirmation ----
 confirmation_label = Label(left_frame, text="")
-confirmation_label.grid(row=6, column=0, pady=5, columnspan=2)
+confirmation_label.grid(row=7, column=0, pady=5, columnspan=2)
 
 
 # ---- Select Colleague Drop Down Menu ----
 
 existing_colleague_label = Label(left_frame, text="Select Existing Colleague")
-existing_colleague_label.grid(row=7, column=0, pady=5, columnspan=2)
+existing_colleague_label.grid(row=8, column=0, pady=5, columnspan=2)
 
 clicked = StringVar()
 clicked.set("Select...") # default value
@@ -137,8 +159,9 @@ def clear_label_image():
 def callback(*choices):
     clear_label_image()
 
-    #space = Label(left_frame, text="")
-    #space.grid(row=0, column=0, pady=0)
+    # used to set position of text in desired location
+    space = Label(left_frame, text="")
+    space.grid(row=0, column=0, pady=8)
 
     basic_font_color = "#ccc4c4"
     bg_color_weather = "#00adad"
@@ -158,7 +181,7 @@ choices = ['op1', 'op2']
 #*colleagues
 
 colleague_drop = OptionMenu(left_frame, clicked, *choices, command=callback)
-colleague_drop.grid(row=8, column=0, pady=5, columnspan=2)
+colleague_drop.grid(row=9, column=0, pady=5, columnspan=2)
 
 # ------- Right FRAME ----------
 # ---- Display Weather
