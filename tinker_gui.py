@@ -4,7 +4,7 @@ from tkinter import messagebox
 from urllib.request import urlopen
 from newsweather import weather, news
 from PIL import Image, ImageTk
-#from country_list import countries_for_language
+from countrygroups import EUROPEAN_UNION
 
 colleagues = []
 
@@ -14,11 +14,13 @@ crt_path = os.getcwd()
 def add_colleague_to_list():
 
     global country_entry
+    global city_entry
     global name_entry
     namestr = name_entry.get()
+    citystr = city_entry.get()
     countrystr = country_entry.get()
 
-    colleagues.append((namestr, countrystr))
+    colleagues.append((namestr, citystr, countrystr))
 
     confirmation_label.config(text=f"Details for {namestr} have been added")
     pass
@@ -45,12 +47,12 @@ right_frame.grid(row=0, column=1, padx=10, pady=5)
 im = Label(root, bitmap="")
 im.grid(row=0, column=1, pady=5, columnspan=2)
 
-im['bitmap'] = crt_path+"/Desktop/have_you_got_the_guts_project/Earth.png"
+im['bitmap'] = crt_path+"/Earth.png"
 
 # ------- LEFT FRAME ----------
 
 #Load logo
-Logo = Image.open(crt_path+"/Desktop/have_you_got_the_guts_project/Logo.png")
+Logo = Image.open(crt_path+"/Logo.png")
 
 #resize logo
 resized = Logo.resize((300, 100), Image.ANTIALIAS)
@@ -172,6 +174,7 @@ def display_weather(name):
 
 # ---- Display News
 def display_news(name):
+    africa = []
     world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
     home_headers = ['england', 'northern ireland', 'scotland', 'wales']
     n_index = colleagues.index(name)
@@ -180,6 +183,11 @@ def display_news(name):
         country = 'united kingdom'
     elif country.title() in EUROPEAN_UNION.names:
         country = 'europe'
+    elif country.lower() == 'united states' or country.lower() == 'us' or country.lower() == 'united states of america' or country.lower() == 'usa':
+        country = 'usa'
+    elif country.lower() == 'canada':
+        pass
+    
     output = news(country)
     return output
 
