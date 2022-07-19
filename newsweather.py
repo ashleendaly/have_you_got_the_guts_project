@@ -1,7 +1,9 @@
+from email.headerregistry import Address
 from urllib.request import urlopen, Request
-#from country_list import countries_for_language
+import requests
+from bs4 import BeautifulSoup
 import mechanicalsoup as ms
-import pycountry
+from countrygroups import EUROPEAN_UNION
 
 # sets up browser to use to access the html of the website
 browser = ms.Browser()
@@ -40,7 +42,7 @@ def weather(country, city):
                 address = "https://www.weather-forecast.com/" + address
                 return address
     
-    #finds info about the weather given the url
+    #finds info about the weather given the url, returns dictionary containing time, temperature and weather
     def get_info(url):
         inform = []
         inform2 = []
@@ -103,6 +105,7 @@ def news(country):
     print("Recent news in " + country)
     country = country.lower()
     
+    # returns url address for the respected webpage to get info from
     def get_url(url, worldH=None):
         req = Request(url, headers={'User-Agent':'Mozilla/5.0'})
         log_page = browser.get(url)
@@ -113,7 +116,7 @@ def news(country):
             text = link.text
             text = text.strip().lower()
             if worldH is not None:
-                if text in world_headers:
+                if text in worldH:
                     if country in text:
                         address = "https://www.bbc.co.uk"+address
                         return address
@@ -121,22 +124,54 @@ def news(country):
                 address = "https://www.bbc.co.uk"+address
                 return address
     
+    # returns a dictionary containing the news headline adn link to the news
+    def get_news(url):
+        output = {}
+        links = []
+        titles = []
+        str_covers = []
+        r1 = requests.get(url)
+        coverpage = r1.content
+        
+        soup1 = BeautifulSoup(coverpage, 'html5lib')
+        coverpage_news = soup1.find_all('a', class_='gs-c-promo-heading gs-o-faux-block-link__overlay-link gel-pica-bold nw-o-link-split__anchor')
+        for cover in coverpage_news:
+            str_covers.append(str(cover))
+            if "https://www.bbc.co.uk" in str(cover['href']) or "https://www.bbc.com" in str(cover['href']):
+                links += [str(cover['href'])]
+            else:
+                links += [str("https://www.bbc.co.uk"+cover['href'])]
+        for cover in str_covers:
+            tofind = '<h3 class="gs-c-promo-heading__title gel-pica-bold nw-o-link-split__text">'
+            start = cover.find('<h3 class="gs-c-promo-heading__title gel-pica-bold nw-o-link-split__text">')
+            start += len(tofind)
+            end = cover.find('</h3>')
+            titles += [cover[start:end]]
+        if len(links)==0 or len(titles)==0:
+            return None
+        for i in range(5):
+            output[titles[i]] = links[i]
+        return output
+    
     if country == 'northern ireland':
         country = 'n. ireland'
     home_headers = ['england', 'n. ireland', 'scotland', 'wales']
     if country in home_headers or (country=='uk' or country=='united kingdom'):
+        if country == 'n. ireland':
+            country = 'northern_ireland'
         url = "https://www.bbc.co.uk/news"
         address = get_url(url)
-        return address
+        if country == 'northern_ireland':
+            address = 'https://www.bbc.co.uk/news/northern_ireland'
+        output = get_news(address)
+        return output
     else:
         if country == 'usa':
             country = 'us '
         world_headers = ['africa', 'asia', 'australia', 'europe', 'latin america', 'middle east', 'us & canada']
         url = "https://www.bbc.co.uk/news/world"
         address = get_url(url, world_headers)
-        return address
-
-print(news('usa'))
-
-#s = weather("pakistan", "karachi")
-#print(s)
+        if country == 'us ':
+            country = 'us'
+        output = get_news(address)
+        return output
